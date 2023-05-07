@@ -11,6 +11,7 @@ var RoutersGroupApp = new(RoutersGroup)
 
 func InitRouter() {
 	router := gin.Default()
+	//跨域中间件
 	// router.Use(middlewares.Cors())
 	PrivateGroup := router.Group("")
 	PrivateGroup.Use()
