@@ -2,12 +2,13 @@ package user
 
 import (
 	"crypto/md5"
+	"easy-gin/consts"
 	"easy-gin/global"
 	receive "easy-gin/interaction/receive/user"
 	response "easy-gin/interaction/response/user"
 	"easy-gin/models/common"
-	userModel "easy-video-net/models/users"
-	"easy-video-net/utils/jwt"
+	userModel "easy-gin/models/user"
+	"easy-gin/utils/jwt"
 	"encoding/json"
 	"fmt"
 	"github.com/go-redis/redis"
