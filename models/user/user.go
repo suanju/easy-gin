@@ -5,29 +5,22 @@ import (
 	"easy-gin/global"
 	"easy-gin/models/common"
 	"fmt"
-	"gorm.io/datatypes"
-	"time"
 )
 
 //User 表结构体
 type User struct {
 	common.PublicModel
-	Email     string         `json:"email" gorm:"column:email"`
-	Username  string         `json:"username" gorm:"column:username"`
-	Openid    string         `json:"openid" gorm:"column:openid"`
-	Salt      string         `json:"salt" gorm:"column:salt"`
-	Password  string         `json:"password" gorm:"column:password"`
-	Photo     datatypes.JSON `json:"photo" gorm:"column:photo"`
-	Gender    int8           `json:"gender" gorm:"column:gender"`
-	BirthDate time.Time      `json:"birth_date" gorm:"column:birth_date"`
-	IsVisible int8           `json:"is_visible" gorm:"column:is_visible"`
-	Signature string         `json:"signature" gorm:"column:signature"`
+	Email     string `json:"email" gorm:"column:email"`
+	Username  string `json:"username" gorm:"column:username"`
+	Salt      string `json:"salt" gorm:"column:salt"`
+	Password  string `json:"password" gorm:"column:password"`
+	Signature string `json:"signature" gorm:"column:signature"`
 }
 
 type UserList []User
 
 func (User) TableName() string {
-	return "lv_users"
+	return "ey_users"
 }
 
 //Update 更新数据
@@ -39,17 +32,8 @@ func (us *User) Update() bool {
 	return true
 }
 
-//UpdatePureZero 更新数据存在0值
-func (us *User) UpdatePureZero(user map[string]interface{}) bool {
-	err := global.Db.Model(&us).Where("id", us.ID).Updates(user).Error
-	if err != nil {
-		return false
-	}
-	return true
-}
-
 //Create 添加数据
-func (us *User) Create() bool {
+func (us *User) create() bool {
 	err := global.Db.Create(&us).Error
 	if err != nil {
 		return false
@@ -82,17 +66,4 @@ func (us *User) IfPasswordCorrect(password string) bool {
 //Find 根据id 查询
 func (us *User) Find(id uint) {
 	_ = global.Db.Where("id", id).Find(&us).Error
-}
-
-//FindLiveInfo 查询直播信息
-func (us *User) FindLiveInfo(id uint) {
-	_ = global.Db.Where("id", id).Preload("LiveInfo").Find(&us).Error
-}
-
-func (l *UserList) GetBeLiveList(ids []uint) error {
-	return global.Db.Where("id", ids).Preload("LiveInfo").Find(&l).Error
-}
-
-func (l *UserList) Search(info common.PageInfo) error {
-	return global.Db.Where("`username` LIKE ?", "%"+info.Keyword+"%").Find(&l).Error
 }
