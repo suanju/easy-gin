@@ -9,7 +9,7 @@ import (
 
 //User 表结构体
 type User struct {
-	common.CommmonModel
+	common.Model
 	Email     string `json:"email" gorm:"column:email"`
 	Username  string `json:"username" gorm:"column:username"`
 	Salt      string `json:"salt" gorm:"column:salt"`
