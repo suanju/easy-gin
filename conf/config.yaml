@@ -1,0 +1,17 @@
+mysql:
+  ip : 127.0.0.1
+  port : 3306
+  user : root
+  password : root
+  database : easy-gin
+  
+redis:
+  ip : 127.0.0.1
+  password :
+  port : 6379
+
+jwt:
+  signing-key: qmPlus
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: qmPlus
