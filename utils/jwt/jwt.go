@@ -10,12 +10,9 @@ import (
 // Hotkey 密钥
 var Hotkey = []byte("G0-store")
 
-// SaltStr  密码盐的随机字符串
-var SaltStr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 //Claims  TOKEN 的结构体
 type Claims struct {
-	UserID uint
+	Uid uint
 	jwt.StandardClaims
 }
 
@@ -23,7 +20,7 @@ type Claims struct {
 func NextToken(uid uint) string {
 	expireTime := time.Now().Add(7 * 24 * time.Hour)
 	claims := &Claims{
-		UserID: uid,
+		Uid: uid,
 		StandardClaims: jwt.StandardClaims{
 			//过期时间
 			ExpiresAt: expireTime.Unix(),
