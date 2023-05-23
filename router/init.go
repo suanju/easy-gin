@@ -1,6 +1,7 @@
 package router
 
 import (
+	"easy-gin/consts"
 	"easy-gin/router/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ type RoutersGroup struct {
 	user user.RouterGroup
 }
 
-// RoutersGroupApp 实例化
+// RoutersGroupApp 实例化路由
 var RoutersGroupApp = new(RoutersGroup)
 
 func init() {
@@ -24,7 +25,7 @@ func init() {
 	PrivateGroup := router.Group("")
 	PrivateGroup.Use()
 	{
-		router.Static("/assets", filepath.ToSlash("./assets")) //如果您的项目中需要展示静态资源
+		router.Static(consts.Resource, filepath.ToSlash(consts.ResourcePath)) //如果您的项目中需要展示静态资源
 		RoutersGroupApp.user.LoginRouter.InitLoginRouter(PrivateGroup)
 	}
 
