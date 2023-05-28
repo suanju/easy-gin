@@ -14,10 +14,12 @@ var Db *redis.Client
 
 func ReturnsInstance() *redis.Client {
 	var err error
-	var redisConfig = config.Config.RConfig
+	var redisConfig = config.Config.RedisConfig
+	fmt.Printf("redis info %s ,%d", redisConfig.IP, redisConfig.Port)
 	b := retry.NewFibonacci(10 * time.Second)
 	ctx := context.Background()
 	if err := retry.Do(ctx, retry.WithMaxRetries(5, b), func(ctx context.Context) error {
+
 		Db = redis.NewClient(&redis.Options{
 			Addr:     fmt.Sprintf("%s:%d", redisConfig.IP, redisConfig.Port),
 			Password: redisConfig.Password, // no password set

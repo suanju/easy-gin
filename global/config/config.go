@@ -1,56 +1,57 @@
 package config
 
 import (
+	"fmt"
+	"gopkg.in/yaml.v3"
+	"io/ioutil"
 	"log"
-	"path/filepath"
-
-	"gopkg.in/ini.v1"
 )
 
 type Info struct {
-	SqlConfig *SqlConfigStruct
-	RConfig   *RConfigStruct
+	SqlConfig   *SqlConfig   `yaml:"mysql"`
+	RedisConfig *RedisConfig `yaml:"redis"`
+	JwtConfig   *JwtConfig   `yaml:"jwt"`
 }
 
 func init() {
-	//避免全局重复导包
 	ReturnsInstance()
 }
 
 var Config = new(Info)
-var cfg *ini.File
-var err error
+var filePath = "./conf/config.yaml"
 
-type SqlConfigStruct struct {
-	IP       string `ini:"ip"`
-	Port     int    `ini:"port"`
-	User     string `ini:"user"`
-	Host     int    `ini:"host"`
-	Password string `ini:"password"`
-	Database string `ini:"database"`
+type SqlConfig struct {
+	IP       string `yaml:"ip"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"user"`
+	Host     int    `yaml:"host"`
+	Password string `yaml:"password"`
+	Database string `yaml:"database"`
 }
 
-type RConfigStruct struct {
-	IP       string `ini:"ip"`
-	Port     int    `ini:"port"`
-	Password string `ini:"password"`
+type RedisConfig struct {
+	IP       string `yaml:"ip"`
+	Port     int    `yaml:"port"`
+	Password string `yaml:"password"`
+}
+
+type JwtConfig struct {
+	SigningKey  string `yaml:"signing-key"`
+	ExpiresTime string `yaml:"expires-time"`
+	BufferTime  string `yaml:"buffer-time"`
+	Issuer      string `yaml:"issuer"`
 }
 
 func ReturnsInstance() *Info {
-	Config.SqlConfig = &SqlConfigStruct{}
-	cfg, err = ini.Load(filepath.ToSlash("./conf/app.ini"))
+	Config = &Info{}
+	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("配置文件不存在,请检查环境: %v \n", err)
+		log.Fatalf("读取配置文件失败,err : %s", err.Error())
 	}
-
-	err = cfg.Section("mysql").MapTo(Config.SqlConfig)
+	err = yaml.Unmarshal(data, Config)
 	if err != nil {
-		log.Fatalf("Mysql读取配置文件错误: %v \n", err)
+		log.Fatalf("解析配置文件失败,err : %s", err.Error())
 	}
-	Config.RConfig = &RConfigStruct{}
-	err = cfg.Section("redis").MapTo(Config.RConfig)
-	if err != nil {
-		log.Fatalf("Redis读取配置文件错误: %v \n", err)
-	}
+	fmt.Println(Config.JwtConfig)
 	return Config
 }
